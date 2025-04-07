@@ -1,15 +1,17 @@
 package com.dotcapital.user.persistence;
 
+import com.dotcapital.user.entities.UserJpaEntity;
 import com.dotcapital.user.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserPersistenceFacade {
     User save(User user);
 
     List<User> findAll();
 
-    User findById(Long id);
+    Optional<User> findById(Long id);
 
     void delete(User user);
 

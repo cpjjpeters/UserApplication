@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /* carlpeters created on 07/04/2025 inside the package - com.dotcapital.user.controller */
@@ -57,10 +58,9 @@ public class UserController {
     }
 
     @GetMapping(value="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> findById(
-        @PathVariable @Min(value = 1, message = "Id must be greater than 0") Long id) {
-            return ResponseEntity
-                    .ok(this.userService.findById(id));
+    public ResponseEntity<User> findById(   @PathVariable @Min(value = 1, message = "Id must be greater than 0") Long id) {
+        log.debug("findById {}", id);
+            return ResponseEntity.ok(this.userService.findById(id));
         }
 
 }

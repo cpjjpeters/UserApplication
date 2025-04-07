@@ -9,7 +9,7 @@ spring:
    datasource:
        driver-class-name: org.h2.Driver
 #       url: jdbc:h2:mem:simpleuserdb
-       url: jdbc:h2:file:~/databaseH2/dcdb;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
+       url: jdbc:h2:file:~/databaseH2/simpleuserdb;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
        username: sa
        password:
 

@@ -1,13 +1,14 @@
 package com.dotcapital.user.services;
 
+import com.dotcapital.exception.RecordNotFoundException;
 import com.dotcapital.user.model.User;
 import com.dotcapital.user.persistence.UserPersistenceFacade;
 import jakarta.validation.constraints.Min;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /* carlpeters created on 07/04/2025 inside the package - com.dotcapital.user.services */
 @Slf4j
@@ -28,6 +29,10 @@ public class UserService {
     }
 
     public User findById(@Min(value = 1, message = "Id must be greater than 0") Long id) {
-         return this.userPersistenceFacade.findById(id);
+         return this.userPersistenceFacade.findById(id)
+                 .orElseThrow(() -> new RecordNotFoundException(String.format("User with id '%d' not found",id)));
+    }
+
+    private void orElseThrow(Object o) {
     }
 }

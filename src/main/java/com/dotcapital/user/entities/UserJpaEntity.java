@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
+import lombok.Data;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ import jakarta.persistence.*;
 @Table(name = "GEBRUIKERS")
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@Data
 public class UserJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
