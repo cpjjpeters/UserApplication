@@ -54,7 +54,7 @@ public class UserController {
         if (users.isEmpty()) {
             return  ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(users.stream().collect(Collectors.toList()));
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping(value="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

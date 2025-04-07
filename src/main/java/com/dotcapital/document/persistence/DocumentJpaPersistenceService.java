@@ -58,6 +58,9 @@ public class DocumentJpaPersistenceService implements DocumentPersistenceFacade 
     @Override
     public List<Document> findAll() {
         log.debug("findAll");
-        return List.of();
+        return documentJpaRepository.findAll()
+                .stream()
+                .map(documentJpaDaoMapper::jpaEntityToModel)
+                .toList();
     }
 }
