@@ -14,8 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,11 +43,11 @@ public class UserController {
     }
 
     @PostMapping(value="/create")
-    public User create(@Validated @RequestBody User user) {
+    public ResponseEntity<User> create(@Validated @RequestBody User user) {
         log.debug("create user or re-activate user  {}", user);
         User savedUser = userService.save(user);
         log.debug("saved user {}", savedUser);
-        return savedUser;
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
     @GetMapping(value = "/all")
@@ -64,11 +66,49 @@ public class UserController {
             return ResponseEntity.ok(this.userService.findById(id));
         }
 
-        @DeleteMapping(value="/delete/{id}")
-        public ResponseEntity<Void> deleteById(@PathVariable @Min(value = 1, message = "Id must be greater than 0") Long id) {
-            log.debug("deleteById {}", id);
-            this.userService.deleteById(id);
-            return ResponseEntity.noContent().build();
+    @DeleteMapping(value="/delete/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable @Min(value = 1, message = "Id must be greater than 0") Long id) {
+        log.debug("deleteById {}", id);
+        this.userService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value = "/update/{id}")
+//    @PutMapping(value = "/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
+        log.debug("Updating user with id {}: {}", id, user);
+        user.setEntityId(id);
+        User updatedUser = userService.save(user);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<User> partiallyUpdateUser(@PathVariable("id") Long id, @RequestBody User user) {
+        log.debug("Partially updating user with id {}: {}", id, user);
+        User existingUser = userService.findById(id);
+
+        // Update only non-null fields
+        if (user.getUserStatus() != null) {
+            existingUser.setUserStatus(user.getUserStatus());
         }
+        if (user.getUserEmail() != null) {
+            existingUser.setUserEmail(user.getUserEmail());
+        }
+        if(user.getUserFirstName() != null) {
+            existingUser.setUserFirstName(user.getUserFirstName());
+        }
+        if(user.getUserLastName() != null) {
+            existingUser.setUserLastName(user.getUserLastName());
+        }
+        if(user.getUserStatus() != null) {
+            existingUser.setUserStatus(user.getUserStatus());
+        }
+        // Add more fields as needed...
+
+        User updatedUser = userService.save(existingUser);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+
 
 }

@@ -15,12 +15,15 @@ import java.util.List;
 public class User {
     private Long entityId;
     private String actorId;
+    private Long version;
     private String userIdentifier;
     private UserCategory userCategory;
     private String moralCustomerId;
     private UserLanguage userLanguage;
     private String userFirstName;
     private String userLastName;
+    private String userFullName;
+    private String userEmail;
     private UserStatus userStatus;
     private int numberFailedLoginAttempts;
     private List<UserMandateDomain> userMandateDomain;
@@ -40,6 +43,14 @@ public class User {
 
     public void setActorId(String actorId) {
         this.actorId = actorId;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public String getUserIdentifier() {
@@ -88,6 +99,22 @@ public class User {
 
     public void setUserLastName(String userLastName) {
         this.userLastName = userLastName;
+    }
+
+    public String getUserFullName() {
+        return userFullName;
+    }
+
+    public void setUserFullName(String userFullName) {
+        this.userFullName = userFullName;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public UserStatus getUserStatus() {
