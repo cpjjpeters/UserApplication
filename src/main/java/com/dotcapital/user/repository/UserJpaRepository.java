@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.nio.channels.FileChannel;
 
 public interface UserJpaRepository extends JpaRepository<UserJpaEntity, Long> {
-    UserJpaEntity findByActorId(Long id);
+    UserJpaEntity findByActorId(String  actorId);
 }

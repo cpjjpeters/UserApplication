@@ -25,8 +25,17 @@ public class UserJpaPersistenceService implements  UserPersistenceFacade{
 
     @Override
     public User save(User user) {
-
-        final UserJpaEntity saved = userJpaRepository.save(userJpaDaoMapper.modelToJpaEntity(user));
+        UserJpaEntity saved = null;
+        if(user.getActorId() != null) {
+            log.debug("update user {}", user);
+            UserJpaEntity found = userJpaRepository.findByActorId(user.getActorId())
+                    ;
+            found.setUserStatus("ACTIVE");
+            saved = userJpaRepository.save(found);
+        } else {
+            log.debug("create user {}", user);
+            saved = userJpaRepository.save(userJpaDaoMapper.modelToJpaEntity(user));
+        }
         log.debug("User JPA = {}", saved.toString());
         return userJpaDaoMapper.jpaEntityToModel(saved);
     }
@@ -47,13 +56,12 @@ public class UserJpaPersistenceService implements  UserPersistenceFacade{
         return this.userJpaRepository.findById(id)
                 .map(userJpaEntity -> this.userJpaDaoMapper.jpaEntityToModel(userJpaEntity));
     }
-//    @Override
-//    public Optional<User> findByActorId(Long id) {
-//        log.debug("findByActorId: {}", id);
-//
-//        return this.userJpaRepository.findByActorId(id)
-//                .map(userJpaEntity -> this.userJpaDaoMapper.jpaEntityToModel(userJpaEntity));
-//    }
+
+    public Optional<UserJpaEntity> findByActorId(String actorId) {
+        log.debug("findByActorId: {}", actorId);
+
+        return Optional.ofNullable(this.userJpaRepository.findByActorId(actorId));
+    }
 
     @Override
     public void delete(User user) {

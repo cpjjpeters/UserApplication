@@ -13,6 +13,8 @@ public interface UserPersistenceFacade {
 
     Optional<User> findById(Long id);
 
+//    Optional<User> findByActorId(Long id);
+
     void delete(User user);
 
     void deleteById(Long id);
