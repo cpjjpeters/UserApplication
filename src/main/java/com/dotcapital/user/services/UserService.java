@@ -35,4 +35,9 @@ public class UserService {
 
     private void orElseThrow(Object o) {
     }
+
+    public void deleteById(@Min(value = 1, message = "Id must be greater than 0") Long id) {
+        log.debug("deleteById {}", id);
+         this.userPersistenceFacade.deleteById(id);
+    }
 }

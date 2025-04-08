@@ -46,8 +46,14 @@ public class UserJpaPersistenceService implements  UserPersistenceFacade{
 
         return this.userJpaRepository.findById(id)
                 .map(userJpaEntity -> this.userJpaDaoMapper.jpaEntityToModel(userJpaEntity));
-//                .flatMap( UserJpaEntity userJpaEntity -> Optional.of(this.userJpaDaoMapper.jpaEntityToModel(userJpaEntity)));
     }
+//    @Override
+//    public Optional<User> findByActorId(Long id) {
+//        log.debug("findByActorId: {}", id);
+//
+//        return this.userJpaRepository.findByActorId(id)
+//                .map(userJpaEntity -> this.userJpaDaoMapper.jpaEntityToModel(userJpaEntity));
+//    }
 
     @Override
     public void delete(User user) {
@@ -58,6 +64,11 @@ public class UserJpaPersistenceService implements  UserPersistenceFacade{
     @Override
     public void deleteById(Long id) {
         log.debug("deleteById: {}", id);
+        UserJpaEntity found = userJpaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found for this id ::" + id));
+        found.setUserStatus("DISABLED");
+        userJpaRepository.save(found);
+
     }
 
     @Override

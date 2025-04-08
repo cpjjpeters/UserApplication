@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,7 +42,7 @@ public class UserController {
 
     @PostMapping(value="/create")
     public User create(@Validated @RequestBody User user) {
-        log.debug("create user {}", user);
+        log.debug("create user or re-activate user  {}", user);
         User savedUser = userService.save(user);
         log.debug("saved user {}", savedUser);
         return savedUser;
@@ -61,6 +62,13 @@ public class UserController {
     public ResponseEntity<User> findById(   @PathVariable @Min(value = 1, message = "Id must be greater than 0") Long id) {
         log.debug("findById {}", id);
             return ResponseEntity.ok(this.userService.findById(id));
+        }
+
+        @DeleteMapping(value="/delete/{id}")
+        public ResponseEntity<Void> deleteById(@PathVariable @Min(value = 1, message = "Id must be greater than 0") Long id) {
+            log.debug("deleteById {}", id);
+            this.userService.deleteById(id);
+            return ResponseEntity.noContent().build();
         }
 
 }
