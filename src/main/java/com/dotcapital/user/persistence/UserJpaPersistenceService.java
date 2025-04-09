@@ -4,6 +4,7 @@ import com.dotcapital.user.entities.UserJpaEntity;
 import com.dotcapital.user.mapper.UserJpaDaoMapper;
 import com.dotcapital.user.model.User;
 import com.dotcapital.user.repository.UserJpaRepository;
+import io.micrometer.common.util.StringUtils;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -60,6 +61,7 @@ public class UserJpaPersistenceService implements UserPersistenceFacade {
         }
         return userJpaDaoMapper.jpaEntityToModel(saved);
     }
+
     @Override
     public List<User> findAll() {
         log.debug("get all users");
@@ -77,11 +79,13 @@ public class UserJpaPersistenceService implements UserPersistenceFacade {
                 .map(userJpaEntity -> this.userJpaDaoMapper.jpaEntityToModel(userJpaEntity));
     }
 
-    public Optional<User> findByActorId(String actorId) {
+    public List<User> findByActorId(String actorId) {
         log.debug("findByActorId: {}", actorId);
 
-        return this.userJpaRepository.findByActorId(actorId)
-                .map(userJpaDaoMapper::jpaEntityToModel);
+        return this.userJpaRepository.findByActorId(actorId).stream()
+                .filter(userJpaEntity -> StringUtils.isNotBlank(userJpaEntity.getActorId()))
+                .map(userJpaDaoMapper::jpaEntityToModel)
+                .toList();
     }
 
     @Override

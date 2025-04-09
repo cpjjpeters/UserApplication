@@ -3,6 +3,7 @@ package com.dotcapital.user.controller;
 import com.dotcapital.user.mapper.UserJpaDaoMapper;
 import com.dotcapital.user.model.User;
 import com.dotcapital.user.services.UserService;
+import io.micrometer.common.util.StringUtils;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
@@ -49,10 +50,13 @@ public class UserController {
     }
 
     private boolean CheckExistingUser(User user) {
-        if (user.getActorId() == null) {
-            return false; // If actorId is null, the user cannot exist
-        }
-        return userService.findByActorId(user.getActorId()).isPresent();
+//        if(StringUtils.isEmpty(user.getActorId()))
+//       {
+//            return false; // If actorId is null, the user cannot exist
+//        }else {
+//
+//        }
+        return userService.findByActorId(user.getActorId()).size() == 1;
     }
 
     @GetMapping(value = "/all")
@@ -82,8 +86,22 @@ public class UserController {
 //    @PutMapping(value = "/{id}")
     public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
         log.debug("Updating user with id {}: {}", id, user);
-        user.setEntityId(id);
-        User updatedUser = userService.save(user, true);
+        User existingUser = userService.findById(id);
+        existingUser.setEntityId(user.getEntityId());
+        existingUser.setActorId(user.getActorId());
+        existingUser.setUserIdentifier(user.getUserIdentifier());
+        existingUser.setUserCategory(user.getUserCategory());
+        existingUser.setMoralCustomerId(user.getMoralCustomerId());
+        existingUser.setUserLanguage(user.getUserLanguage());
+        existingUser.setUserFirstName(user.getUserFirstName());
+        existingUser.setUserLastName(user.getUserLastName());
+        existingUser.setUserFullName(user.getUserFullName());
+        existingUser.setUserEmail(user.getUserEmail());
+        existingUser.setUserStatus(user.getUserStatus());
+        existingUser.setUserMandateDomain(user.getUserMandateDomain());
+        existingUser.setFinalized(user.isFinalized());
+
+        User updatedUser = userService.updateUser(existingUser);
         return ResponseEntity.ok(updatedUser);
     }
 
@@ -95,6 +113,9 @@ public class UserController {
         // Update only non-null fields
         if (user.getUserStatus() != null) {
             existingUser.setUserStatus(user.getUserStatus());
+        }
+        if(user.getUserIdentifier() != null) {
+            existingUser.setUserIdentifier(user.getUserIdentifier());
         }
         if (user.getUserEmail() != null) {
             existingUser.setUserEmail(user.getUserEmail());
@@ -108,9 +129,12 @@ public class UserController {
         if(user.getUserStatus() != null) {
             existingUser.setUserStatus(user.getUserStatus());
         }
+        if(user.getMoralCustomerId() != null) {
+            existingUser.setMoralCustomerId(user.getMoralCustomerId());
+        }
         // Add more fields as needed...
 
-        User updatedUser = userService.save(existingUser, true);
+        User updatedUser = userService.updateUser(existingUser);
         return ResponseEntity.ok(updatedUser);
     }
 

@@ -1,5 +1,6 @@
 package com.dotcapital.exception;
 
+
 /* carlpeters created on 07/04/2025 inside the package - com.dotcapital.exception */
 public class FunctionalException extends RuntimeException {
 
@@ -12,6 +13,7 @@ public class FunctionalException extends RuntimeException {
             this.errorInput.setSeverity(ErrorSeverity.W);
         }
     }
+
 
     public ErrorInput getErrorInput() {
         return errorInput;
