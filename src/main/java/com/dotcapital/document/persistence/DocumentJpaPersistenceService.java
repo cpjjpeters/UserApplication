@@ -4,6 +4,7 @@ import com.dotcapital.document.entities.DocumentJpaEntity;
 import com.dotcapital.document.mapper.DocumentJpaDaoMapper;
 import com.dotcapital.document.model.Document;
 import com.dotcapital.document.repository.DocumentJpaRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class DocumentJpaPersistenceService implements DocumentPersistenceFacade 
     }
 
     @Override
+    @Transactional
     public Document save(Document document) {
         final DocumentJpaEntity saved = documentJpaRepository.save(documentJpaDaoMapper.modelToJpaEntity(document));
         log.debug("save document: {}", saved);
@@ -39,17 +41,20 @@ public class DocumentJpaPersistenceService implements DocumentPersistenceFacade 
     }
 
     @Override
+    @Transactional
     public Document update(Document document) {
         return null;
     }
 
     @Override
+    @Transactional
     public void delete(Document document) {
         log.debug("delete: {}", document);
 
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         log.debug("deleteById: {}", id);
 

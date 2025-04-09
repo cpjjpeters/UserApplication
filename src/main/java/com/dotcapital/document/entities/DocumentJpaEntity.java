@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.validation.annotation.Validated;
 
 @Table(name = "DOCUMENTS")
 @Entity
@@ -23,36 +24,7 @@ public class DocumentJpaEntity {
     private Boolean finalized;
     @Column
     private String documentAuthor;
+    @Version
+    private Long version;
 
-    public Long getDocumentId() {
-        return documentId;
-    }
-
-    public void setDocumentId(Long documentId) {
-        this.documentId = documentId;
-    }
-
-    public String getDocumentName() {
-        return documentName;
-    }
-
-    public void setDocumentName(String documentName) {
-        this.documentName = documentName;
-    }
-
-    public Boolean getFinalized() {
-        return finalized;
-    }
-
-    public void setFinalized(Boolean finalized) {
-        this.finalized = finalized;
-    }
-
-    public String getDocumentAuthor() {
-        return documentAuthor;
-    }
-
-    public void setDocumentAuthor(String documentAuthor) {
-        this.documentAuthor = documentAuthor;
-    }
 }

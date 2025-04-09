@@ -20,8 +20,17 @@ public class UserService {
          this.userPersistenceFacade = userPersistenceFacade;
      }
 
-     public User save(User user) {
-         return this.userPersistenceFacade.save(user);
+     public User save(User user, boolean isExistingUser) {
+            log.debug("save user {}, {}", user, isExistingUser);
+            if (isExistingUser) {
+                // If the user already exists, update the status to ACTIVE
+                return this.userPersistenceFacade.adapt(user);
+
+            } else {
+                // If the user does not exist, set the status to INACTIVE
+                return this.userPersistenceFacade.save(user);
+            }
+
      }
 
     public List<User> findAll() {
@@ -33,11 +42,14 @@ public class UserService {
                  .orElseThrow(() -> new RecordNotFoundException(String.format("User with id '%d' not found",id)));
     }
 
-    private void orElseThrow(Object o) {
-    }
 
     public void deleteById(@Min(value = 1, message = "Id must be greater than 0") Long id) {
         log.debug("deleteById {}", id);
          this.userPersistenceFacade.deleteById(id);
+    }
+
+    public Optional<User> findByActorId(String actorId) {
+        log.debug("findByActorId {}", actorId);
+        return this.userPersistenceFacade.findByActorId(actorId);
     }
 }

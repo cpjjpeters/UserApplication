@@ -1,9 +1,7 @@
 package com.dotcapital.user.controller;
 
-import com.dotcapital.user.entities.UserJpaEntity;
 import com.dotcapital.user.mapper.UserJpaDaoMapper;
 import com.dotcapital.user.model.User;
-import com.dotcapital.user.repository.UserJpaRepository;
 import com.dotcapital.user.services.UserService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Min;
@@ -23,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /* carlpeters created on 07/04/2025 inside the package - com.dotcapital.user.controller */
 @Transactional
@@ -45,9 +41,18 @@ public class UserController {
     @PostMapping(value="/create")
     public ResponseEntity<User> create(@Validated @RequestBody User user) {
         log.debug("create user or re-activate user  {}", user);
-        User savedUser = userService.save(user);
+        // Check if the user already exists by actorId
+        boolean isExistingUser = CheckExistingUser(user);
+        User savedUser = userService.save(user, isExistingUser);
         log.debug("saved user {}", savedUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+    }
+
+    private boolean CheckExistingUser(User user) {
+        if (user.getActorId() == null) {
+            return false; // If actorId is null, the user cannot exist
+        }
+        return userService.findByActorId(user.getActorId()).isPresent();
     }
 
     @GetMapping(value = "/all")
@@ -78,7 +83,7 @@ public class UserController {
     public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
         log.debug("Updating user with id {}: {}", id, user);
         user.setEntityId(id);
-        User updatedUser = userService.save(user);
+        User updatedUser = userService.save(user, true);
         return ResponseEntity.ok(updatedUser);
     }
 
@@ -105,7 +110,7 @@ public class UserController {
         }
         // Add more fields as needed...
 
-        User updatedUser = userService.save(existingUser);
+        User updatedUser = userService.save(existingUser, true);
         return ResponseEntity.ok(updatedUser);
     }
 

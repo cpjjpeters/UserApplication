@@ -13,11 +13,12 @@ public interface UserPersistenceFacade {
 
     Optional<User> findById(Long id);
 
-//    Optional<User> findByActorId(Long id);
+    Optional<User> findByActorId(String actor_id);
 
     void delete(User user);
 
     void deleteById(Long id);
 
     User update(User user);
+    User adapt(User user);
 }
